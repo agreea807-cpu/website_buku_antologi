@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>500 MDPL — Setiap Langkah Menyimpan Cerita</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,900;1,400;1,700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet"/>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+ 
+  :root {
+    --cream: #FAFAF7;
+    --slate: #2C3E50;
+    --forest: #1B2A1E;
+    --amber: #D4A017;
+    --amber-light: #F0C040;
+    --ink: #1A1A1A;
+    --muted: #6B7280;
+    --card-bg: #FFFFFF;
+    --border: rgba(44,62,80,0.12);
+    --wa-green: #25D366;
+  }
+ 
+  html { scroll-behavior: smooth; }
+ 
+  body {
+    font-family: 'Lato', sans-serif;
+    background: var(--cream);
+    color: var(--ink);
+    overflow-x: hidden;
+  }
+ 
+  h1,h2,h3,h4 { font-family: 'Playfair Display', serif; }
+ 
+  /* ─── NAV ─── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1rem 2.5rem;
+    background: rgba(250,250,247,0.88);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    transition: box-shadow .3s;
+  }
+  nav.scrolled { box-shadow: 0 4px 24px rgba(0,0,0,.08); }
+  .nav-brand { font-family: 'Playfair Display', serif; font-weight: 900; font-size: 1.35rem; letter-spacing: 2px; color: var(--slate); }
+  .nav-links { display: flex; gap: 2rem; list-style: none; }
+  .nav-links a { text-decoration: none; color: var(--ink); font-size: .875rem; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; position: relative; transition: color .2s; }
+  .nav-links a::after { content:''; position:absolute; bottom:-3px; left:0; width:0; height:2px; background:var(--amber); transition:width .25s; }
+  .nav-links a:hover { color: var(--slate); }
+  .nav-links a:hover::after { width:100%; }
+  .nav-cta { background: var(--slate); color: #fff; padding: .5rem 1.4rem; border-radius: 2px; text-decoration: none; font-size: .8rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; transition: background .2s, transform .15s; }
+  .nav-cta:hover { background: var(--amber); transform: translateY(-1px); }
+  .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; }
+  .hamburger span { width: 24px; height: 2px; background: var(--ink); display: block; transition: .3s; }
+ 
+  /* ─── HERO ─── */
+  #hero {
+    min-height: 100vh;
+    display: flex; align-items: center;
+    padding: 7rem 2.5rem 4rem;
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(135deg, #FAFAF7 0%, #EEF0E8 100%);
+  }
+ 
+  /* Watercolor blob BG */
+  .hero-blob {
+    position: absolute; top: -10%; right: -5%;
+    width: 55vw; max-width: 700px;
+    aspect-ratio: 1;
+    background: radial-gradient(ellipse 70% 60% at 60% 40%, rgba(44,62,80,.08) 0%, transparent 70%),
+                radial-gradient(ellipse 50% 70% at 30% 60%, rgba(212,160,23,.1) 0%, transparent 60%);
+    filter: blur(40px);
+    pointer-events: none;
+  }
+ 
+  /* Mountain silhouette SVG BG */
+  .mountain-bg {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    pointer-events: none; z-index: 0;
+  }
+ 
+  .hero-inner {
+    max-width: 1200px; margin: 0 auto;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center;
+    position: relative; z-index: 1; width: 100%;
+  }
+ 
+  .hero-text {}
+  .hero-tag {
+    display: inline-block;
+    background: rgba(212,160,23,.15);
+    color: #9A7010;
+    font-size: .75rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase;
+    padding: .35rem .9rem; border-radius: 2px; margin-bottom: 1.5rem;
+    border: 1px solid rgba(212,160,23,.3);
+  }
+  .hero-title {
+    font-size: clamp(2.4rem, 5vw, 4rem);
+    font-weight: 900; line-height: 1.1;
+    color: var(--forest);
+    margin-bottom: 1.2rem;
+  }
+  .hero-title em { font-style: italic; color: var(--amber); }
+  .hero-sub {
+    font-size: 1.05rem; color: var(--muted); line-height: 1.8;
+    max-width: 480px; margin-bottom: 2.2rem; font-weight: 400;
+  }
+  .hero-btns { display: flex; gap: 1rem; flex-wrap: wrap; }
+  .btn-primary {
+    background: var(--slate); color: #fff;
+    padding: .85rem 2rem; border-radius: 3px;
+    text-decoration: none; font-weight: 700; font-size: .9rem; letter-spacing: .04em;
+    transition: background .2s, transform .15s, box-shadow .2s;
+    box-shadow: 0 4px 16px rgba(44,62,80,.25);
+  }
+  .btn-primary:hover { background: var(--forest); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(44,62,80,.3); }
+  .btn-secondary {
+    background: transparent; color: var(--slate);
+    padding: .85rem 2rem; border-radius: 3px;
+    text-decoration: none; font-weight: 700; font-size: .9rem; letter-spacing: .04em;
+    border: 2px solid var(--slate);
+    transition: background .2s, color .2s, transform .15s;
+  }
+  .btn-secondary:hover { background: var(--slate); color: #fff; transform: translateY(-2px); }
+ 
+  /* Book 3D Mockup */
+  .hero-book-wrap {
+    display: flex; justify-content: center; align-items: center;
+    position: relative;
+  }
+  .book-3d {
+    position: relative;
+    animation: levitate 4s ease-in-out infinite;
+    filter: drop-shadow(0 40px 60px rgba(0,0,0,.22));
+  }
+  @keyframes levitate {
+    0%,100% { transform: translateY(0) rotate(-2deg); }
+    50% { transform: translateY(-18px) rotate(-2deg); }
+  }
+  .book-cover {
+    width: 280px;
+    border-radius: 4px 12px 12px 4px;
+    display: block;
+    position: relative; z-index: 2;
+    border: 1px solid rgba(0,0,0,.08);
+  }
+  /* Spine illusion */
+  .book-spine {
+    position: absolute; left: -22px; top: 3px; bottom: 3px; width: 22px;
+    background: linear-gradient(90deg, #13202e, #2C3E50);
+    border-radius: 4px 0 0 4px;
+    z-index: 1;
+    transform: skewY(-1deg);
+  }
+  /* Glare */
+  .book-glare {
+    position: absolute; top: 0; left: 0; width: 50%; height: 100%;
+    background: linear-gradient(135deg, rgba(255,255,255,.18) 0%, transparent 60%);
+    border-radius: 0 0 0 0; pointer-events: none; z-index: 3;
+    border-radius: 4px 0 0 4px;
+  }
+  .book-pages {
+    position: absolute; right: -6px; top: 4px; bottom: 4px; width: 8px;
+    background: repeating-linear-gradient(90deg, #f0ece6 0 1px, #e8e4de 1px 2px);
+    border-radius: 0 2px 2px 0;
+    z-index: 1;
+  }
+ 
+  /* ─── SECTION SHARED ─── */
+  section { padding: 6rem 2.5rem; position: relative; }
+  .section-inner { max-width: 1100px; margin: 0 auto; }
+  .section-label {
+    font-size: .72rem; font-weight: 700; letter-spacing: .2em; text-transform: uppercase;
+    color: var(--amber); margin-bottom: .75rem;
+  }
+  .section-title {
+    font-size: clamp(1.8rem, 4vw, 2.8rem); font-weight: 900;
+    color: var(--forest); margin-bottom: 1rem; line-height: 1.15;
+  }
+  .section-divider {
+    width: 56px; height: 3px; background: var(--amber); margin-bottom: 2.5rem; border-radius: 2px;
+  }
+ 
+  /* Mountain ridge divider */
+  .ridge-divider { width: 100%; overflow: hidden; line-height: 0; }
+  .ridge-divider svg { display: block; }
+ 
+  /* Fade-in observer */
+  .fade-in { opacity: 0; transform: translateY(30px); transition: opacity .7s ease, transform .7s ease; }
+  .fade-in.visible { opacity: 1; transform: translateY(0); }
+ 
+  /* ─── ABOUT ─── */
+  #about { background: #fff; }
+  .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: start; }
+  .about-synopsis { font-size: 1.05rem; line-height: 1.9; color: #3a3a3a; }
+  .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; }
+  .stat-card {
+    background: var(--cream); padding: 1.5rem; border-radius: 8px;
+    border: 1px solid var(--border);
+    display: flex; flex-direction: column; gap: .5rem;
+    transition: transform .2s, box-shadow .2s;
+  }
+  .stat-card:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0,0,0,.07); }
+  .stat-icon { font-size: 2rem; }
+  .stat-value { font-family: 'Playfair Display', serif; font-size: 1.8rem; font-weight: 900; color: var(--slate); }
+  .stat-label { font-size: .8rem; color: var(--muted); font-weight: 700; letter-spacing: .05em; text-transform: uppercase; }
+ 
+  /* ─── AUTHORS ─── */
+  #authors { background: var(--cream); }
+  .authors-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; margin-top: 1rem; }
+  .author-card {
+    background: #fff; border-radius: 12px; padding: 2.5rem 2rem;
+    border: 1px solid var(--border);
+    text-align: center;
+    transition: transform .25s, box-shadow .25s;
+    position: relative; overflow: hidden;
+  }
+  .author-card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px;
+    background: linear-gradient(90deg, var(--slate), var(--amber));
+  }
+  .author-card:hover { transform: translateY(-6px); box-shadow: 0 20px 48px rgba(0,0,0,.1); }
+  .author-avatar {
+    width: 80px; height: 80px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Playfair Display', serif; font-size: 1.6rem; font-weight: 900; color: #fff;
+    margin: 0 auto 1.25rem; position: relative;
+  }
+  .avatar-1 { background: linear-gradient(135deg, #2C3E50, #4a6073); }
+  .avatar-2 { background: linear-gradient(135deg, #1B2A1E, #3d5c42); }
+  .avatar-3 { background: linear-gradient(135deg, #8B6914, #D4A017); }
+  .author-name { font-family: 'Playfair Display', serif; font-size: 1.2rem; font-weight: 700; color: var(--forest); margin-bottom: .4rem; }
+  .author-chapter { font-size: .85rem; color: var(--muted); font-style: italic; margin-bottom: .75rem; line-height: 1.4; }
+  .author-role {
+    display: inline-block; background: rgba(44,62,80,.07);
+    color: var(--slate); font-size: .72rem; font-weight: 700; letter-spacing: .1em;
+    text-transform: uppercase; padding: .3rem .8rem; border-radius: 20px;
+  }
+ 
+  /* ─── CHAPTERS ─── */
+  #chapters { background: var(--forest); color: #fff; }
+  #chapters .section-title { color: #fff; }
+  #chapters .section-label { color: var(--amber-light); }
+  #chapters .section-divider { background: var(--amber); }
+  .chapters-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; margin-top: 1rem; }
+  .chapter-card {
+    background: rgba(255,255,255,.05); border-radius: 12px; padding: 2rem;
+    border: 1px solid rgba(255,255,255,.1);
+    transition: background .25s, transform .25s, box-shadow .25s;
+    position: relative; overflow: hidden;
+  }
+  .chapter-card:hover { background: rgba(255,255,255,.09); transform: translateY(-4px); box-shadow: 0 16px 40px rgba(0,0,0,.3); }
+  .chapter-num {
+    font-family: 'Playfair Display', serif; font-size: 3.5rem; font-weight: 900;
+    color: rgba(212,160,23,.2); line-height: 1; margin-bottom: .75rem;
+  }
+  .chapter-title { font-family: 'Playfair Display', serif; font-size: 1.15rem; font-weight: 700; color: #fff; margin-bottom: .4rem; }
+  .chapter-author { font-size: .78rem; color: var(--amber-light); font-weight: 700; letter-spacing: .08em; text-transform: uppercase; margin-bottom: 1rem; }
+  .chapter-teaser { font-size: .9rem; color: rgba(255,255,255,.6); line-height: 1.7; font-style: italic; }
+ 
+  /* ─── GALLERY ─── */
+  #gallery { background: #fff; }
+  .gallery-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; margin-top: 1rem; }
+  .gallery-item { text-align: center; }
+  .gallery-frame {
+    position: relative; display: inline-block;
+    border-radius: 8px; overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0,0,0,.15), 0 4px 16px rgba(0,0,0,.08);
+    transition: transform .3s, box-shadow .3s;
+    max-width: 320px; width: 100%;
+  }
+  .gallery-frame:hover { transform: translateY(-6px) rotate(1deg); box-shadow: 0 32px 80px rgba(0,0,0,.2); }
+  .gallery-frame img, .gallery-frame .cover-placeholder {
+    width: 100%; display: block; aspect-ratio: 3/4; object-fit: cover;
+  }
+  .cover-placeholder {
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    font-family: 'Playfair Display', serif; color: #fff; gap: .5rem;
+    text-align: center; padding: 2rem;
+  }
+  .cover-placeholder-front { background: linear-gradient(160deg, #2C3E50 0%, #1B2A1E 100%); }
+  .cover-placeholder-back { background: linear-gradient(160deg, #3d5c42 0%, #1B2A1E 100%); }
+  .cover-placeholder .book-title-big { font-size: 2.5rem; font-weight: 900; letter-spacing: 4px; }
+  .cover-placeholder .book-sub { font-size: .85rem; opacity: .7; letter-spacing: 1px; }
+  .cover-placeholder .back-text { font-size: .82rem; opacity: .75; line-height: 1.7; margin-top: 1rem; font-family: 'Lato', sans-serif; font-style: italic; }
+  .gallery-label { margin-top: 1rem; font-size: .8rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+ 
+  /* ─── HOW TO GET ─── */
+  #how { background: var(--cream); }
+  .how-intro { font-size: 1.05rem; color: var(--muted); margin-bottom: 3rem; max-width: 560px; }
+  .steps-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; margin-bottom: 3rem; }
+  .step-card {
+    background: #fff; border-radius: 12px; padding: 2rem;
+    border: 1px solid var(--border); position: relative;
+    transition: transform .2s, box-shadow .2s;
+  }
+  .step-card:hover { transform: translateY(-4px); box-shadow: 0 12px 32px rgba(0,0,0,.08); }
+  .step-num {
+    font-family: 'Playfair Display', serif; font-size: 3rem; font-weight: 900;
+    color: var(--amber); line-height: 1; margin-bottom: 1rem;
+  }
+  .step-text { font-size: .95rem; color: var(--ink); line-height: 1.7; }
+  /* connector line */
+  .steps-grid .step-card:not(:last-child)::after {
+    content: '→'; position: absolute; right: -1.5rem; top: 50%;
+    transform: translateY(-50%); font-size: 1.2rem; color: var(--amber); z-index: 2;
+  }
+  .btn-wa {
+    display: inline-flex; align-items: center; gap: .6rem;
+    background: var(--wa-green); color: #fff;
+    padding: 1rem 2.5rem; border-radius: 4px;
+    text-decoration: none; font-weight: 700; font-size: 1rem;
+    transition: background .2s, transform .15s, box-shadow .2s;
+    box-shadow: 0 4px 20px rgba(37,211,102,.35);
+  }
+  .btn-wa:hover { background: #1ebe5d; transform: translateY(-2px); box-shadow: 0 8px 28px rgba(37,211,102,.45); }
+  .btn-wa svg { width: 22px; height: 22px; }
+ 
+  /* ─── CONTACT ─── */
+  #contact { background: var(--slate); color: #fff; }
+  #contact .section-title { color: #fff; }
+  #contact .section-label { color: var(--amber-light); }
+  #contact .section-divider { background: var(--amber); }
+  .contact-card {
+    background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.12);
+    border-radius: 16px; padding: 3rem; max-width: 600px; margin: 0 auto; text-align: center;
+  }
+  .contact-msg { font-size: 1.05rem; color: rgba(255,255,255,.75); margin-bottom: 2.5rem; line-height: 1.8; }
+  .contact-btns { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+  .btn-contact {
+    display: inline-flex; align-items: center; gap: .55rem;
+    padding: .85rem 2rem; border-radius: 4px; text-decoration: none;
+    font-weight: 700; font-size: .9rem; transition: transform .15s, box-shadow .2s;
+  }
+  .btn-contact:hover { transform: translateY(-2px); }
+  .btn-wa-contact { background: var(--wa-green); color: #fff; box-shadow: 0 4px 16px rgba(37,211,102,.3); }
+  .btn-wa-contact:hover { box-shadow: 0 8px 24px rgba(37,211,102,.45); }
+  .btn-ig { background: linear-gradient(135deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); color: #fff; box-shadow: 0 4px 16px rgba(220,39,67,.3); }
+  .btn-ig:hover { box-shadow: 0 8px 24px rgba(220,39,67,.45); }
+  .contact-btns svg { width: 20px; height: 20px; }
+ 
+  /* ─── FOOTER ─── */
+  footer {
+    background: var(--forest); color: rgba(255,255,255,.6);
+    text-align: center; padding: 3rem 2rem;
+    font-size: .85rem; line-height: 2;
+  }
+  .footer-title { font-family: 'Playfair Display', serif; font-size: 1.5rem; font-weight: 900; color: #fff; letter-spacing: 3px; margin-bottom: .5rem; }
+  .footer-authors { color: rgba(255,255,255,.75); margin-bottom: .35rem; }
+  .footer-tagline { font-style: italic; color: var(--amber); margin-bottom: .5rem; }
+ 
+  /* ─── RESPONSIVE ─── */
+  @media (max-width: 900px) {
+    .hero-inner { grid-template-columns: 1fr; text-align: center; }
+    .hero-sub { margin-left: auto; margin-right: auto; }
+    .hero-btns { justify-content: center; }
+    .hero-book-wrap { order: -1; }
+    .about-grid { grid-template-columns: 1fr; }
+    .authors-grid { grid-template-columns: 1fr; max-width: 380px; margin-left: auto; margin-right: auto; }
+    .chapters-grid { grid-template-columns: 1fr; }
+    .gallery-grid { grid-template-columns: 1fr; justify-items: center; }
+    .steps-grid { grid-template-columns: 1fr; }
+    .steps-grid .step-card:not(:last-child)::after { display: none; }
+    .nav-links { display: none; }
+    .hamburger { display: flex; }
+    .nav-links.open {
+      display: flex; flex-direction: column;
+      position: fixed; top: 60px; left: 0; right: 0;
+      background: var(--cream); padding: 2rem; gap: 1.5rem;
+      border-bottom: 1px solid var(--border); z-index: 99;
+    }
+  }
+  @media (max-width: 600px) {
+    section { padding: 4rem 1.25rem; }
+    nav { padding: 1rem 1.25rem; }
+    .book-cover { width: 200px; }
+  }
+</style>
+</head>
+<body>
+ 
+<!-- NAV -->
+<nav id="navbar">
+  <div class="nav-brand">500 MDPL</div>
+  <ul class="nav-links" id="nav-links">
+    <li><a href="#about">Tentang</a></li>
+    <li><a href="#authors">Penulis</a></li>
+    <li><a href="#chapters">Isi Buku</a></li>
+    <li><a href="#gallery">Preview</a></li>
+    <li><a href="#how">Cara Beli</a></li>
+  </ul>
+  <a href="#contact" class="nav-cta">Hubungi Kami</a>
+  <div class="hamburger" id="hamburger" onclick="toggleMenu()">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+ 
+<!-- ─── HERO ─── -->
+<section id="hero">
+  <div class="hero-blob"></div>
+  <!-- Mountain SVG background -->
+  <div class="mountain-bg">
+    <svg viewBox="0 0 1440 220" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+      <path d="M0 220 L0 140 L120 60 L240 120 L360 30 L480 100 L600 10 L720 90 L840 20 L960 80 L1080 40 L1200 100 L1320 50 L1440 110 L1440 220 Z" fill="rgba(44,62,80,0.04)"/>
+      <path d="M0 220 L0 180 L180 100 L320 160 L480 80 L640 150 L800 70 L960 140 L1120 90 L1280 150 L1440 110 L1440 220 Z" fill="rgba(44,62,80,0.05)"/>
+    </svg>
+  </div>
+ 
+  <div class="hero-inner">
+    <div class="hero-text fade-in">
+      <div class="hero-tag">✦ Antologi Perjalanan ·</div>
+      <h1 class="hero-title">Setiap Langkah<br/><em>Menyimpan Cerita</em></h1>
+      <p class="hero-sub">Sebuah antologi perjalanan nyata menuju Puncak Sepadang Hill — tentang kebersamaan, keberanian, dan arti sebuah proses.</p>
+<div class="hero-btns">
+    <a href="https://wa.me/6281345910524" class="btn-primary" target="_blank">Hubungi Kami</a>
+    
+    <a href="https://instagram.com/rzkihrnnda" class="btn-secondary" target="_blank">Instagram</a>
+</div>
+    </div>
+ 
+    <div class="hero-book-wrap fade-in">
+      <div class="book-3d">
+        <div class="book-spine"></div>
+        <!-- Replace src with cover-front.jpg when available -->
+<img src="cover-depan.png" alt="Cover Depan 500 MDPL" class="book-cover" style="width:280px; height:auto; border-radius:4px 12px 12px 4px;"/>
+        <!-- <img src="cover-front.jpg" alt="Cover Depan 500 MDPL" class="book-cover"/> -->
+        <div class="book-glare"></div>
+        <div class="book-pages"></div>
+      </div>
+    </div>
+  </div>
+</section>
+ 
+<!-- Ridge Divider 1 -->
+<div class="ridge-divider">
+  <svg viewBox="0 0 1440 60" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" style="background:#FAFAF7;">
+    <path d="M0 60 L0 40 L80 20 L160 45 L240 15 L360 40 L440 10 L540 35 L640 5 L740 30 L840 8 L940 28 L1040 12 L1140 32 L1240 18 L1340 38 L1440 20 L1440 60 Z" fill="#ffffff"/>
+  </svg>
+</div>
+ 
+<!-- ─── ABOUT ─── -->
+<section id="about">
+  <div class="section-inner">
+    <div class="section-label fade-in">Tentang Buku</div>
+    <h2 class="section-title fade-in">Tentang Buku</h2>
+    <div class="section-divider fade-in"></div>
+    <div class="about-grid">
+      <div class="about-synopsis fade-in">
+        <p>Buku <strong>500 MDPL</strong> mengisahkan perjalanan nyata tiga sahabat menuju Puncak Sepadang Hill, sebuah bukit dengan ketinggian sekitar 500 meter di atas permukaan laut. Berawal dari obrolan santai sepulang sekolah untuk memenuhi tugas KIK, perjalanan ini berubah menjadi pengalaman berharga tentang keberanian mengambil keputusan, kesiapan menghadapi tantangan, serta arti kebersamaan dalam setiap langkah.</p>
+        <br/>
+        <p>Buku ini terdiri dari tiga sudut pandang berbeda — masing-masing penulis menceritakan perjalanan yang sama dengan cara yang unik. Dari tanjakan sakit hati, malam berkemah di puncak, hingga momen matahari terbit yang mengubah cara pandang tentang hidup.</p>
+        <br/>
+        <p><em>500 MDPL bukan sekadar kisah pendakian, tetapi juga refleksi tentang bagaimana langkah kecil yang dilakukan bersama dapat membawa kita menuju puncak yang membanggakan.</em></p>
+      </div>
+      <div class="stats-grid fade-in">
+        <div class="stat-card">
+          <div class="stat-icon">✍️</div>
+          <div class="stat-value">3</div>
+          <div class="stat-label">Penulis</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">👁️</div>
+          <div class="stat-value">3</div>
+          <div class="stat-label">Sudut Pandang</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">🧭</div>
+          <div class="stat-value">1</div>
+          <div class="stat-label">Perjalanan Nyata</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">⛰️</div>
+          <div class="stat-value" style="font-size:1.3rem;">500m</div>
+          <div class="stat-label">Puncak Sepadang Hill</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+ 
+<!-- Ridge Divider 2 -->
+<div class="ridge-divider">
+  <svg viewBox="0 0 1440 60" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" style="background:#fff;">
+    <path d="M0 0 L0 60 L1440 60 L1440 0 L1360 30 L1260 8 L1160 28 L1060 6 L960 24 L860 4 L760 22 L660 2 L560 20 L460 0 L360 22 L260 5 L160 25 L60 5 Z" fill="#FAFAF7"/>
+  </svg>
+</div>
+ 
+<!-- ─── AUTHORS ─── -->
+<section id="authors">
+  <div class="section-inner">
+    <div class="section-label fade-in">Para Penulis</div>
+    <h2 class="section-title fade-in">Penulis</h2>
+    <div class="section-divider fade-in"></div>
+    <div class="authors-grid">
+      <div class="author-card fade-in">
+        <div class="author-avatar avatar-1">A</div>
+        <div class="author-name">Agre Prana Musarai</div>
+        <div class="author-chapter">"Setetes Yang Menghidupi Dunia"</div>
+        <span class="author-role">Penulis &amp; Pendaki</span>
+      </div>
+      <div class="author-card fade-in">
+        <div class="author-avatar avatar-2">A</div>
+        <div class="author-name">Alvin Ahmad Saputra</div>
+        <div class="author-chapter">"Berkelana Membuat Cerita"</div>
+        <span class="author-role">Penulis &amp; Pendaki</span>
+      </div>
+      <div class="author-card fade-in">
+        <div class="author-avatar avatar-3">R</div>
+        <div class="author-name">Rizki Hernanda</div>
+        <div class="author-chapter">"Tentang Asa Rasa Perjalanan"</div>
+        <span class="author-role">Penulis &amp; Pendaki</span>
+      </div>
+    </div>
+  </div>
+</section>
+ 
+<!-- Ridge Divider 3 (into dark) -->
+<div class="ridge-divider">
+  <svg viewBox="0 0 1440 60" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" style="background:#FAFAF7;">
+    <path d="M0 60 L0 35 L100 15 L200 38 L320 8 L440 32 L540 12 L640 36 L760 6 L880 30 L980 10 L1100 34 L1200 14 L1300 36 L1440 18 L1440 60 Z" fill="#1B2A1E"/>
+  </svg>
+</div>
+ 
+<!-- ─── CHAPTERS ─── -->
+<section id="chapters">
+  <div class="section-inner">
+    <div class="section-label fade-in">Isi Buku</div>
+    <h2 class="section-title fade-in">Isi Buku</h2>
+    <div class="section-divider fade-in"></div>
+    <div class="chapters-grid">
+      <div class="chapter-card fade-in">
+        <div class="chapter-num">01</div>
+        <div class="chapter-title">Setetes Yang Menghidupi Dunia</div>
+        <div class="chapter-author">Agre Prana Musarai</div>
+        <div class="chapter-teaser">"Perjalanan dimulai dari obrolan sederhana — dan dari sanalah segalanya berubah..."</div>
+      </div>
+      <div class="chapter-card fade-in">
+        <div class="chapter-num">02</div>
+        <div class="chapter-title">Berkelana Membuat Cerita</div>
+        <div class="chapter-author">Alvin Ahmad Saputra</div>
+        <div class="chapter-teaser">"Setiap belokan jalur menyimpan kejutan. Mendaki ternyata bukan hanya soal kaki, tapi juga hati..."</div>
+      </div>
+      <div class="chapter-card fade-in">
+        <div class="chapter-num">03</div>
+        <div class="chapter-title">Tentang Asa Rasa Perjalanan</div>
+        <div class="chapter-author">Rizki Hernanda</div>
+        <div class="chapter-teaser">"Di ketinggian 500 meter, diam pun punya arti. Ini tentang rasa yang sulit dijelaskan dengan kata-kata biasa..."</div>
+      </div>
+    </div>
+  </div>
+</section>
+ 
+<!-- Ridge Divider 4 (out of dark) -->
+<div class="ridge-divider">
+  <svg viewBox="0 0 1440 60" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" style="background:#1B2A1E;">
+    <path d="M0 0 L0 60 L1440 60 L1440 0 L1360 28 L1260 6 L1140 28 L1040 8 L940 30 L820 4 L720 26 L620 4 L500 28 L400 8 L300 30 L200 10 L100 30 L0 0Z" fill="#ffffff"/>
+  </svg>
+</div>
+ 
+<!-- ─── GALLERY ─── -->
+<section id="gallery">
+  <div class="section-inner">
+    <div class="section-label fade-in">Preview Buku</div>
+    <h2 class="section-title fade-in">Preview Buku</h2>
+    <div class="section-divider fade-in"></div>
+<div class="gallery-grid">
+  <div class="gallery-item fade-in">
+    <div style="display:flex; justify-content:center;">
+      <div class="gallery-frame">
+        <img src="cover-depan.png" alt="Cover Depan" style="width:100%; height:100%; object-fit:cover; display:block; border-radius:8px;">
+      </div>
+    </div>
+    <div class="gallery-label">Cover Depan</div>
+  </div>
+
+  <div class="gallery-item fade-in">
+    <div style="display:flex; justify-content:center;">
+      <div class="gallery-frame">
+        <img src="cover-belakang.png" alt="Cover Belakang" style="width:100%; height:100%; object-fit:cover; display:block; border-radius:8px;">
+      </div>
+    </div>
+    <div class="gallery-label">Cover Belakang</div>
+  </div>
+</div>
+ 
+<!-- ─── HOW TO GET ─── -->
+<section id="how">
+  <div class="section-inner">
+    <div class="section-label fade-in">Pemesanan</div>
+    <h2 class="section-title fade-in">Cara Mendapatkan Buku</h2>
+    <div class="section-divider fade-in"></div>
+    <p class="how-intro fade-in">Untuk informasi pemesanan dan harga, hubungi kami langsung. Kami akan dengan senang hati membantu proses pemesanan kamu.</p>
+    <div class="steps-grid">
+      <div class="step-card fade-in">
+        <div class="step-num">01</div>
+        <div class="step-text">Hubungi kami via <strong>WhatsApp</strong> atau <strong>Instagram</strong> untuk menanyakan ketersediaan dan harga buku.</div>
+      </div>
+      <div class="step-card fade-in">
+        <div class="step-num">02</div>
+        <div class="step-text">Konfirmasi jumlah buku yang diinginkan &amp; alamat pengiriman yang lengkap.</div>
+      </div>
+      <div class="step-card fade-in">
+        <div class="step-num">03</div>
+        <div class="step-text">Buku <strong>dikirimkan ke kamu!</strong> 🎉 Nikmati perjalanan bersama tiga penulis kami.</div>
+      </div>
+    </div>
+    <div class="fade-in" style="text-align:center;">
+      <a href="#contact" class="btn-wa">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.125.558 4.122 1.532 5.86L.057 23.535a.75.75 0 00.916.918l5.77-1.505A11.95 11.95 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.99 0-3.85-.549-5.44-1.5l-.39-.23-4.04 1.054 1.073-3.942-.254-.407A9.96 9.96 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
+        Hubungi Kami Sekarang
+      </a>
+    </div>
+  </div>
+</section>
+ 
+<!-- Ridge Divider 6 (into slate) -->
+<div class="ridge-divider">
+  <svg viewBox="0 0 1440 60" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" style="background:#FAFAF7;">
+    <path d="M0 60 L0 35 L100 12 L200 36 L320 10 L440 38 L540 14 L640 40 L760 8 L880 34 L980 12 L1100 38 L1220 16 L1340 40 L1440 20 L1440 60 Z" fill="#2C3E50"/>
+  </svg>
+</div>
+ 
+<!-- ─── CONTACT ─── -->
+<section id="contact">
+  <div class="section-inner">
+    <div class="section-label fade-in" style="text-align:center;">Hubungi Kami</div>
+    <h2 class="section-title fade-in" style="text-align:center;">Hubungi Kami</h2>
+    <div class="section-divider fade-in" style="margin-left:auto;margin-right:auto;"></div>
+    <div class="contact-card fade-in">
+      <p class="contact-msg">Kami siap menjawab pertanyaan dan menerima pemesanan buku <strong style="color:#fff;">500 MDPL</strong>. Hubungi kami melalui WhatsApp atau Instagram!</p>
+      <div class="contact-btns">
+        <!-- Update href with real WhatsApp number: https://wa.me/62XXXXXXXXXX -->
+        <a href="https://wa.me/6281345910524" target="_blank" class="btn-contact btn-wa-contact">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.125.558 4.122 1.532 5.86L.057 23.535a.75.75 0 00.916.918l5.77-1.505A11.95 11.95 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.99 0-3.85-.549-5.44-1.5l-.39-.23-4.04 1.054 1.073-3.942-.254-.407A9.96 9.96 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
+          WhatsApp
+        </a>
+        <!-- Update href with real Instagram: https://instagram.com/YOUR_HANDLE -->
+        <a href="https://instagram.com/rzkihrnnda" target="_blank" class="btn-contact btn-ig">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+          Instagram
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+ 
+<!-- ─── FOOTER ─── -->
+<footer>
+  <div class="footer-title">500 MDPL</div>
+  <div class="footer-authors">Agre Prana Musarai · Alvin Ahmad Saputra · Rizki Hernanda</div>
+  <div class="footer-tagline">Dibuat dengan semangat pendakian</div>
+  <div>&copy; 2025 500 MDPL. All rights reserved.</div>
+</footer>
+ 
+<script>
+  // ── Scroll-based navbar shadow
+  const navbar = document.getElementById('navbar');
+  window.addEventListener('scroll', () => {
+    navbar.classList.toggle('scrolled', window.scrollY > 30);
+  });
+ 
+  // ── Hamburger menu
+  function toggleMenu() {
+    document.getElementById('nav-links').classList.toggle('open');
+  }
+  // close on link click
+  document.querySelectorAll('.nav-links a').forEach(a => {
+    a.addEventListener('click', () => {
+      document.getElementById('nav-links').classList.remove('open');
+    });
+  });
+ 
+  // ── Intersection Observer fade-in
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach((e, i) => {
+      if (e.isIntersecting) {
+        // stagger siblings
+        const siblings = e.target.closest('.authors-grid, .chapters-grid, .steps-grid, .gallery-grid, .stats-grid');
+        if (siblings) {
+          const all = siblings.querySelectorAll('.fade-in');
+          all.forEach((el, idx) => {
+            setTimeout(() => el.classList.add('visible'), idx * 120);
+          });
+        } else {
+          e.target.classList.add('visible');
+        }
+        obs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12 });
+ 
+  document.querySelectorAll('.fade-in').forEach(el => obs.observe(el));
+ 
+  // ── To use real images, uncomment these and ensure files are in same folder:
+  // document.querySelectorAll('.cover-placeholder-front').forEach(el => {
+  //   const img = document.createElement('img');
+  //   img.src = 'cover-front.jpg';
+  //   img.alt = 'Cover Depan 500 MDPL';
+  //   img.style.cssText = 'width:100%;height:100%;object-fit:cover;display:block;';
+  //   el.replaceWith(img);
+  // });
+  // document.querySelectorAll('.cover-placeholder-back').forEach(el => {
+  //   const img = document.createElement('img');
+  //   img.src = 'cover-back.jpg';
+  //   img.alt = 'Cover Belakang 500 MDPL';
+  //   img.style.cssText = 'width:100%;height:100%;object-fit:cover;display:block;';
+  //   el.replaceWith(img);
+  // });
+</script>
+</body>
+</html>
